@@ -1,0 +1,54 @@
+PONTE {VERSION} - BUILD PARA TESTES
+
+ANDROID
+Instale o APK no telefone. Para atualizar uma instalacao existente do Ponte,
+instale por cima sem desinstalar. Requer Android 8 ou posterior.
+Este APK usa assinatura de desenvolvimento; nao e uma versao de loja.
+
+WINDOWS
+1. Extraia o ZIP inteiro em uma pasta onde voce tenha permissao para gravar.
+2. Abra "Iniciar Ponte.cmd". Nao execute o EXE interno diretamente.
+3. Mantenha a pasta "app" completa: ela inclui o runtime .NET e as dependencias.
+4. Requer Windows 10/11 x64. Nao e necessario instalar o .NET separadamente.
+
+O iniciador cria a pasta "data" ao lado dele, na sua propria pasta extraida.
+Assim este pacote nao depende do disco D nem dos caminhos do desenvolvedor.
+O Windows pode avisar que o executavel nao possui assinatura de editor.
+Confira a origem e os hashes antes de executar; nao desative protecoes do sistema.
+
+PRIMEIRA CONEXAO
+Conecte PC e telefone a mesma rede local. No Windows, abra Conexao e gere o
+QR Code. No Android, escaneie o QR ou use o link. Aprove no seu computador.
+Para controlar o PC, selecione o telefone em Dispositivos e autorize o controle.
+Autorizar arquivos nao libera a tela automaticamente.
+
+ANDROID NO PC
+No Windows, selecione o telefone e use Abrir Android. No telefone, inicie
+Compartilhar Android e aceite a captura. Para gestos, habilite manualmente o
+servico Ponte na Acessibilidade. Use Inicio/Voltar no visualizador para sair
+da tela do Ponte. Cliques em permissoes/configuracoes e entrada em senhas
+continuam bloqueados. Ha um botao Parar na notificacao do telefone.
+
+ARQUIVOS E PRIVACIDADE
+Ao fechar e reabrir o Ponte no Windows, as copias internas da biblioteca sao
+apagadas. Originais e copias salvas fora dela permanecem. Salve o que quiser manter.
+Nao compartilhe sua pasta "data": ela contem sua identidade e pareamentos.
+Este pacote nao inclui dados, certificados, pareamentos ou tokens do desenvolvedor.
+Cada computador cria sua propria identidade no primeiro uso.
+
+INTERNET E DDNS
+Teste primeiro na rede local. Acesso por internet exige configuracao propria,
+IPv6/roteador compativeis e permissao explicita no Windows. Nao abra DMZ nem
+desative o firewall. Conta/token DuckDNS sao opcionais e pertencem a voce.
+O programa nao abre portas do roteador automaticamente.
+
+LIMITACOES
+E uma build para testes. Captura e gestos Android variam por fabricante/app.
+Troca de rede, bloqueio e rotacao encerram a captura Android e exigem nova
+autorizacao. Nao ha audio Android -> PC. O teclado nesse sentido substitui
+o campo focado, nao reproduz todas as teclas em tempo real.
+
+CONFERENCIA
+SHA256SUMS.txt acompanha a distribuicao. No PowerShell, use:
+Get-FileHash .\ponte-{VERSION}-android.apk -Algorithm SHA256
+Get-FileHash .\ponte-{VERSION}-windows-x64.zip -Algorithm SHA256

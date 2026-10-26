@@ -1,0 +1,149 @@
+<Window x:Class="Ponte.Windows.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:shell="clr-namespace:System.Windows.Shell;assembly=PresentationFramework"
+        Title="Ponte · Central de conexões" Width="1080" Height="780" MinWidth="900" MinHeight="640"
+        MaxHeight="{Binding Source={x:Static SystemParameters.WorkArea}, Path=Height}" WindowStartupLocation="CenterScreen"
+        WindowStyle="None" Background="#ECE9D8" Loaded="OnLoaded" Closing="OnClosing">
+  <shell:WindowChrome.WindowChrome><shell:WindowChrome CaptionHeight="0" ResizeBorderThickness="6" GlassFrameThickness="0" CornerRadius="6"/></shell:WindowChrome.WindowChrome>
+  <Border Background="#ECE9D8" BorderBrush="#0054E3" BorderThickness="3" CornerRadius="7">
+    <Grid>
+      <Grid.RowDefinitions><RowDefinition Height="36"/><RowDefinition Height="46"/><RowDefinition Height="*"/><RowDefinition Height="27"/></Grid.RowDefinitions>
+      <Border CornerRadius="4,4,0,0" MouseLeftButtonDown="DragTitleBar">
+        <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#559AF5" Offset="0"/><GradientStop Color="#0863ED" Offset="0.28"/><GradientStop Color="#0051D4" Offset="0.8"/><GradientStop Color="#003AB3" Offset="1"/></LinearGradientBrush></Border.Background>
+        <Grid Margin="9,0,5,0">
+          <Grid.ColumnDefinitions><ColumnDefinition Width="26"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <Image Source="Assets/Xp/pc.png" Width="24" Height="24"/>
+          <TextBlock Grid.Column="1" Text="Ponte — Central de conexões" Foreground="White" FontSize="15" FontWeight="Bold" VerticalAlignment="Center" Margin="6,0"/>
+          <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+            <Button Style="{StaticResource XpCaptionButton}" Content="—" ToolTip="Minimizar" Click="MinimizeWindow"/>
+            <Button Style="{StaticResource XpCaptionButton}" Content="□" ToolTip="Maximizar ou restaurar" Click="ToggleMaximize"/>
+            <Button Style="{StaticResource XpCaptionButton}" Content="×" ToolTip="Fechar Ponte" Click="CloseWindow" Background="#D94C31"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+      <Border Grid.Row="1" BorderBrush="#ACA899" BorderThickness="0,0,0,1" Padding="10,4">
+        <DockPanel>
+          <TextBlock Text="Escolha uma tarefa" FontWeight="Bold" Foreground="#003399" VerticalAlignment="Center" Margin="6,0,22,0"/>
+          <Button Content="Conectar telefone" Tag="connect" Click="NavigateSection" Padding="12,5"/>
+          <Button Content="Atualizar" Click="RefreshClicked" Padding="12,5"/>
+          <Button Content="Como usar?" Click="ShowQuickHelp" HorizontalAlignment="Right" Padding="12,5"/>
+        </DockPanel>
+      </Border>
+      <Grid Grid.Row="2" Margin="10">
+        <Grid.ColumnDefinitions><ColumnDefinition Width="216"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+        <Border CornerRadius="4" Padding="10">
+          <Border.Background><LinearGradientBrush StartPoint="0,0" EndPoint="0,1"><GradientStop Color="#87A9DB" Offset="0"/><GradientStop Color="#6489C0" Offset="1"/></LinearGradientBrush></Border.Background>
+          <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+            <StackPanel>
+              <GroupBox Header="Tarefas rápidas" Margin="0,0,0,12">
+                <StackPanel>
+                  <Button Content="Controlar dispositivos" Style="{StaticResource XpStartButton}" Tag="control" Click="NavigateSection"/>
+                  <Button Content="Enviar um arquivo…" Click="AddFiles"/>
+                  <Button Content="Conectar novo telefone" Tag="connect" Click="NavigateSection"/>
+                </StackPanel>
+              </GroupBox>
+              <Border x:Name="RemotePanel" Background="White" BorderBrush="#91A9D1" BorderThickness="1" CornerRadius="4" Padding="10" Margin="0,0,0,12">
+                <StackPanel>
+                  <TextBlock Text="Controle deste PC" FontWeight="Bold" Foreground="#003399" Margin="0,0,0,8"/>
+                  <TextBlock x:Name="RemoteStatus" Text="Desativado. Selecione um telefone em Controlar para autorizar." TextWrapping="Wrap" FontSize="11"/>
+                  <CheckBox Margin="0,10,0,6" Checked="AudioPermissionChanged" Unchecked="AudioPermissionChanged"><TextBlock Text="Permitir áudio do PC" TextWrapping="Wrap"/></CheckBox>
+                  <Button x:Name="EnableRemoteButton" Content="Autorizar telefone" Click="EnableRemote" IsEnabled="False"/>
+                  <Button x:Name="StopRemoteButton" Content="Parar / revogar" ToolTip="Ctrl+Alt+F10" Click="StopRemote" Background="#FFF0EA" Foreground="#A42512" IsEnabled="False"/>
+                  <TextBlock Text="A permissão fica salva até você revogar. Atalho de parada: Ctrl+Alt+F10." Foreground="#526174" FontSize="10" TextWrapping="Wrap" Margin="0,8,0,0"/>
+                </StackPanel>
+              </Border>
+              <GroupBox Header="Primeira vez?">
+                <TextBlock Text="1. Conecte pelo QR Code.&#10;2. Aprove o telefone no PC.&#10;3. Escolha o que controlar." TextWrapping="Wrap" FontSize="11"/>
+              </GroupBox>
+            </StackPanel>
+          </ScrollViewer>
+        </Border>
+        <TabControl x:Name="MainTabs" Grid.Column="2">
+          <TabItem x:Name="DevicesTab" Header="Controlar">
+            <Grid Margin="14">
+              <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*" MinHeight="100"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+              <StackPanel Margin="0,0,0,12">
+                <TextBlock Text="Controlar seus dispositivos" FontSize="21" FontWeight="Bold" Foreground="#003399"/>
+                <TextBlock Text="Selecione um telefone pareado e escolha a direção do controle." TextWrapping="Wrap" Foreground="#526174" Margin="0,6,0,0"/>
+              </StackPanel>
+              <GroupBox Grid.Row="1" Header="Telefones pareados" Margin="0,0,0,14">
+                <Grid>
+                  <ListBox x:Name="DevicesList" BorderThickness="0" Background="White">
+                    <ListBox.ItemTemplate><DataTemplate><StackPanel Orientation="Horizontal"><Image Source="Assets/Xp/phone.png" Width="42" Height="42" Margin="0,0,10,0"/><StackPanel VerticalAlignment="Center"><TextBlock Text="{Binding Name}" FontWeight="Bold"/><TextBlock Text="Telefone pareado — selecione para usar" FontSize="11" Foreground="#526174" Margin="0,4,0,0"/></StackPanel></StackPanel></DataTemplate></ListBox.ItemTemplate>
+                  </ListBox>
+                  <TextBlock Text="Nenhum telefone ainda. Use Conectar para começar." HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="12" Foreground="#526174"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding HasItems, ElementName=DevicesList}" Value="False"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+                </Grid>
+              </GroupBox>
+              <StackPanel Grid.Row="2">
+                <Grid>
+                  <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="12"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+                  <GroupBox Header="Usar o PC pelo telefone">
+                    <StackPanel><Image Source="Assets/Xp/pc.png" Width="64" Height="64" HorizontalAlignment="Left"/><TextBlock Text="Tela, mouse, teclado e áudio do computador." TextWrapping="Wrap" Margin="0,4,0,10"/><Button Content="Autorizar controle do PC" Style="{StaticResource XpStartButton}" Click="EnableRemote" IsEnabled="{Binding IsEnabled, ElementName=EnableRemoteButton}"/></StackPanel>
+                  </GroupBox>
+                  <GroupBox Grid.Column="2" Header="Usar o Android pelo PC">
+                    <StackPanel><Image Source="Assets/Xp/phone.png" Width="64" Height="64" HorizontalAlignment="Left"/><TextBlock Text="Abra a tela e autorize a captura no telefone." TextWrapping="Wrap" Margin="0,4,0,10"/><Button Content="Abrir tela do Android" Click="OpenAndroid"/></StackPanel>
+                  </GroupBox>
+                </Grid>
+                <Button Content="Remover acesso do telefone selecionado…" Click="RevokeDevice" HorizontalAlignment="Left" Margin="0,10,0,0" Foreground="#A42512"/>
+              </StackPanel>
+            </Grid>
+          </TabItem>
+          <TabItem x:Name="FilesTab" Header="Arquivos">
+            <Grid Margin="14">
+              <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+              <StackPanel Orientation="Horizontal"><Image Source="Assets/Xp/folder.png" Width="42" Height="42" Margin="0,0,12,0"/><StackPanel><TextBlock Text="Compartilhar arquivos" FontSize="21" FontWeight="Bold" Foreground="#003399"/><TextBlock Text="Envie pelo PC ou pelo telefone. Escolha onde salvar suas cópias." TextWrapping="Wrap" Foreground="#526174" Margin="0,5,0,0"/></StackPanel></StackPanel>
+              <WrapPanel Grid.Row="1" Margin="0,12"><Button Content="Adicionar arquivo…" Click="AddFiles"/><Button Content="Salvar cópia…" Click="SaveFile"/><Button Content="Atualizar lista" Click="RefreshClicked"/></WrapPanel>
+              <ListView x:Name="FilesList" Grid.Row="2" Background="White" BorderBrush="#7F9DB9" BorderThickness="1"><ListView.View><GridView><GridViewColumn Header="Nome" DisplayMemberBinding="{Binding Name}" Width="310"/><GridViewColumn Header="Bytes" DisplayMemberBinding="{Binding Size}" Width="115"/><GridViewColumn Header="Origem" DisplayMemberBinding="{Binding Source}" Width="90"/></GridView></ListView.View></ListView>
+              <TextBlock Grid.Row="2" Text="Sua biblioteca está vazia. Adicione um arquivo ou envie pelo telefone." Foreground="#526174" HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" Margin="12,45,12,12"><TextBlock.Style><Style TargetType="TextBlock"><Setter Property="Visibility" Value="Collapsed"/><Style.Triggers><DataTrigger Binding="{Binding HasItems, ElementName=FilesList}" Value="False"><Setter Property="Visibility" Value="Visible"/></DataTrigger></Style.Triggers></Style></TextBlock.Style></TextBlock>
+              <Border Grid.Row="3" Background="#FFF8D8" BorderBrush="#D8BD76" BorderThickness="1" Padding="10" Margin="0,12,0,0"><TextBlock Text="Biblioteca temporária: reabrir o Ponte apaga as cópias internas. Salve fora dela o que quiser manter. Os originais não são alterados." TextWrapping="Wrap" Foreground="#674D14" FontSize="11"/></Border>
+            </Grid>
+          </TabItem>
+          <TabItem x:Name="ConnectionTab" Header="Conectar">
+            <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+              <StackPanel Margin="14">
+                <TextBlock Text="Conectar um telefone" FontSize="21" FontWeight="Bold" Foreground="#003399"/>
+                <TextBlock Text="Na mesma rede, escaneie o QR Code e aprove a solicitação neste PC." TextWrapping="Wrap" Foreground="#526174" Margin="0,6,0,16"/>
+                <GroupBox Header="Passo 1 · Parear na rede local">
+                  <Grid>
+                    <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="210"/></Grid.ColumnDefinitions>
+                    <StackPanel Margin="0,0,14,0">
+                      <TextBlock Text="Endereço do PC" FontWeight="Bold"/>
+                      <ComboBox x:Name="HostAddress" IsEditable="True" Padding="6" Margin="0,6"/>
+                      <TextBlock x:Name="NetworkHint" TextWrapping="Wrap" Foreground="#526174" FontSize="11" Margin="0,2,0,10"/>
+                      <Button x:Name="PairButton" Content="Gerar novo QR Code" Click="GeneratePairing" IsEnabled="False"/>
+                      <Button Content="Copiar link de pareamento" Click="CopyPairing"/>
+                      <TextBlock x:Name="TicketStatus" TextWrapping="Wrap" Foreground="#526174" FontSize="11" Margin="0,8"/>
+                    </StackPanel>
+                    <StackPanel Grid.Column="1"><Image x:Name="QrImage" Width="180" Height="180"/><TextBlock Text="Abra Ponte → Escanear QR Code no Android." TextWrapping="Wrap" FontSize="11" HorizontalAlignment="Center" Margin="8"/></StackPanel>
+                  </Grid>
+                </GroupBox>
+                <Expander x:Name="InternetOptions" Header="Internet e endereço fixo (opcional)" Margin="0,16,0,0">
+                  <StackPanel Margin="8">
+                    <CheckBox x:Name="InternetPermission" Margin="0,6" Checked="InternetPermissionChanged" Unchecked="InternetPermissionChanged"><TextBlock Text="Permitir dispositivos já pareados pela internet" TextWrapping="Wrap"/></CheckBox>
+                    <TextBox x:Name="InternetAddress" IsReadOnly="True" TextWrapping="Wrap" ToolTip="IPv6 público não temporário deste PC. Selecione para copiar."/>
+                    <TextBlock Text="Porta TCP 47831. Requer IPv6 e configuração da rede. O Ponte não abre portas automaticamente. Pareie primeiro na rede local." TextWrapping="Wrap" Foreground="#526174" FontSize="11" Margin="0,4,0,12"/>
+                    <GroupBox Header="DuckDNS gratuito · endereço fixo">
+                      <StackPanel>
+                        <TextBlock Text="Crie sua conta em duckdns.org. Informe o token somente neste campo protegido." TextWrapping="Wrap" FontSize="11" Margin="0,0,0,8"/>
+                        <TextBlock Text="Subdomínio (ex.: meu-pc.duckdns.org)"/>
+                        <TextBox x:Name="DdnsDomain"/>
+                        <TextBlock Text="Token (vazio mantém o salvo)"/>
+                        <PasswordBox x:Name="DdnsToken" Padding="7" Margin="0,6"/>
+                        <CheckBox x:Name="DdnsEnabled" Content="Atualizar meu IPv6 automaticamente" Margin="0,6"/>
+                        <Button x:Name="DdnsSave" Content="Salvar DDNS" Click="SaveDdns" HorizontalAlignment="Left"/>
+                        <TextBlock x:Name="DdnsStatus" TextWrapping="Wrap" FontSize="11" Foreground="#526174" Margin="0,8"/>
+                      </StackPanel>
+                    </GroupBox>
+                  </StackPanel>
+                </Expander>
+                <Expander Header="Diagnóstico de conexão" Margin="0,12"><TextBlock x:Name="ConnectionStatus" Text="Nenhuma tentativa do telefone recebida nesta execução." TextWrapping="Wrap" Foreground="#526174" FontSize="11" Margin="8"/></Expander>
+              </StackPanel>
+            </ScrollViewer>
+          </TabItem>
+        </TabControl>
+      </Grid>
+      <Border Grid.Row="3" BorderBrush="#ACA899" BorderThickness="0,1,0,0" Background="#F0EEE3" Padding="8,3">
+        <DockPanel><TextBlock DockPanel.Dock="Right" Text="Clássico XP · Ponte 0.8" Foreground="#526174" Margin="10,0,0,0"/><TextBlock x:Name="Status" Text="Iniciando conexão segura…" Foreground="#19446F" TextTrimming="CharacterEllipsis" ToolTip="{Binding Text, RelativeSource={RelativeSource Self}}"/></DockPanel>
+      </Border>
+    </Grid>
+  </Border>
+</Window>

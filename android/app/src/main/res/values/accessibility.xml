@@ -1,0 +1,3 @@
+<resources>
+    <string name="accessibility_description">Permite ao PC pareado clicar, deslizar e preencher campos enquanto você compartilha a tela pelo Ponte. Não controla permissões, senhas ou configurações do sistema. Ativar este serviço sozinho não inicia captura nem autoriza comandos. Pare o compartilhamento pela notificação a qualquer momento.</string>
+</resources>

@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+    <Version>0.8.0</Version>
+  </PropertyGroup>
+  <ItemGroup>
+    <Resource Include="Assets/Xp/*.png" />
+    <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    <PackageReference Include="QRCoder" Version="1.6.0" />
+    <PackageReference Include="NAudio" Version="2.2.1" />
+    <ProjectReference Include="../shared/Ponte.Core.csproj" />
+  </ItemGroup>
+</Project>
